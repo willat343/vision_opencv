@@ -36,7 +36,6 @@
 #include "boost/endian/conversion.hpp"
 
 #include <map>
-#include <regex>
 
 #include <boost/make_shared.hpp>
 
@@ -48,6 +47,13 @@
 
 #include <cv_bridge/cv_bridge.h>
 #include <cv_bridge/rgb_colors.h>
+
+#if ! defined __GLIBCXX__ || __GLIBCXX__ > 20150426
+#include <regex>
+#else
+#include <boost/regex.hpp>
+#define USE_BOOST_REGEX
+#endif
 
 namespace enc = sensor_msgs::image_encodings;
 
@@ -72,6 +78,18 @@ static int depthStrToInt(const std::string depth) {
 
 int getCvType(const std::string& encoding)
 {
+
+#ifndef USE_BOOST_REGEX
+  std::regex FormatterFormatGroupPattern("\\$\\{([a-zA-Z]+)[}]", std::regex::egrep);
+  // The [}] is a workaround for a bug in at least libstdc++ 5.4 that throws on "\\}" (BUT not on "\\{").
+  using std::cmatch;
+  using std::regex;
+#else
+  boost::regex FormatterFormatGroupPattern("\\$\\{([a-z|A-Z]+)\\}");
+  using boost::cmatch;
+  using boost::regex;
+#endif
+
   // Check for the most common encodings first
   if (encoding == enc::BGR8)   return CV_8UC3;
   if (encoding == enc::MONO8)  return CV_8UC1;
@@ -98,15 +116,15 @@ int getCvType(const std::string& encoding)
   if (encoding == enc::YUV422) return CV_8UC2;
 
   // Check all the generic content encodings
-  std::cmatch m;
+  cmatch m;
 
-  if (std::regex_match(encoding.c_str(), m,
-        std::regex("(8U|8S|16U|16S|32S|32F|64F)C([0-9]+)"))) {
+  if (regex_match(encoding.c_str(), m,
+        regex("(8U|8S|16U|16S|32S|32F|64F)C([0-9]+)"))) {
     return CV_MAKETYPE(depthStrToInt(m[1].str()), atoi(m[2].str().c_str()));
   }
 
-  if (std::regex_match(encoding.c_str(), m,
-        std::regex("(8U|8S|16U|16S|32S|32F|64F)"))) {
+  if (regex_match(encoding.c_str(), m,
+        regex("(8U|8S|16U|16S|32S|32F|64F)"))) {
     return CV_MAKETYPE(depthStrToInt(m[1].str()), 1);
   }
 
