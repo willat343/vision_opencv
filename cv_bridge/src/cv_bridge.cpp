@@ -80,16 +80,11 @@ int getCvType(const std::string& encoding)
 {
 
 #ifndef USE_BOOST_REGEX
-  std::regex FormatterFormatGroupPattern("\\$\\{([a-zA-Z]+)[}]", std::regex::egrep);
-  // The [}] is a workaround for a bug in at least libstdc++ 5.4 that throws on "\\}" (BUT not on "\\{").
   using std::match_results;
-  using std::regex_search;
   using std::cmatch;
   using std::regex;
 #else
-  boost::regex FormatterFormatGroupPattern("\\$\\{([a-z|A-Z]+)\\}");
   using boost::match_results;
-  using boost::regex_search;
   using boost::cmatch;
   using boost::regex;
 #endif
