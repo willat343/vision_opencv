@@ -2,6 +2,67 @@
 Changelog for package cv_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.12.8 (2018-04-17)
+-------------------
+* Merge pull request `#191 <https://github.com/ros-perception/vision_opencv/issues/191>`_ from patrickelectric/kinetic
+  cv2_to_imgmsg: step must be int
+* cv2_to_imgmsg: step must be int
+  Signed-off-by: Patrick José Pereira <patrickelectric@gmail.com>
+* Contributors: Patrick José Pereira, Vincent Rabaud
+
+1.12.7 (2017-11-12)
+-------------------
+
+1.12.6 (2017-11-11)
+-------------------
+* fix endianness issues
+* Contributors: Vincent Rabaud
+
+1.12.5 (2017-11-05)
+-------------------
+* add version_gte for opencv3
+  @vrabaud If you'll update opencv3 version as discussed in https://discourse.ros.org/t/opencv-3-3/2674/4, I think we'd better to add 'version_gte' tag so that apt-get install ros-kinetic-cv-bridge also pulls openv3.3 from repository, to avoid API breaking issue between opencv2 and opencv3.
+* Simplify the dependency components of cv_bridge
+  Fixes `#183 <https://github.com/ros-perception/vision_opencv/issues/183>`_
+* Fixes `#177 <https://github.com/ros-perception/vision_opencv/issues/177>`_
+  The Python bridge was wrong on OpenCV2 with mono8 (and any Mat
+  with only two dimensions btw). Took the official Python bridge
+  from OpenCV.
+* Add missing test file
+  This fixes `#171 <https://github.com/ros-perception/vision_opencv/issues/171>`_
+* Properly deal with alpha in image compression.
+  That fixes `#169 <https://github.com/ros-perception/vision_opencv/issues/169>`_
+* Silence warnings about un-used variables
+* export OpenCV variables
+* Contributors: Kei Okada, Victor Lamoine, Vincent Rabaud
+
+1.12.4 (2017-01-29)
+-------------------
+* properly find Boost Python 2 or 3
+  This fixes `#158 <https://github.com/ros-perception/vision_opencv/issues/158>`_
+* Contributors: Vincent Rabaud
+
+1.12.3 (2016-12-04)
+-------------------
+* Use api in sensor_msgs to get byte_depth and num channels
+* Implement cpp conversion of N channel image
+  This is cpp version of https://github.com/ros-perception/vision_opencv/pull/141,
+  which is one for python.
+* Fill black color to depth nan region
+* address gcc6 build error in cv_bridge and tune
+  With gcc6, compiling fails with `stdlib.h: No such file or directory`,
+  as including '-isystem /usr/include' breaks with gcc6, cf.,
+  https://gcc.gnu.org/bugzilla/show_bug.cgi?id=70129
+  This commit addresses this issue for cv_bridge in the same way
+  it was done in the commit ead421b8 [1] for image_geometry.
+  This issue was also addressed in various other ROS packages.
+  A list of related commits and pull requests is at:
+  https://github.com/ros/rosdistro/issues/12783
+  [1] https://github.com/ros-perception/vision_opencv/commit/ead421b85eeb750cbf7988657015296ed6789bcf
+  Signed-off-by: Lukas Bulwahn <lukas.bulwahn@oss.bmw-carit.de>
+* cv_bridge: Add missing test_depend on numpy
+* Contributors: Kentaro Wada, Lukas Bulwahn, Maarten de Vries
+
 1.12.2 (2016-09-24)
 -------------------
 * Specify background label when colorizing label image
