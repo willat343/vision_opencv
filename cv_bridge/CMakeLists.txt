@@ -10,17 +10,29 @@ endif()
 find_package(catkin REQUIRED COMPONENTS rosconsole sensor_msgs)
 
 if(NOT ANDROID)
-find_package(Boost REQUIRED python)
+  find_package(PythonLibs)
+  if(PYTHONLIBS_VERSION_STRING VERSION_LESS 3)
+    find_package(Boost REQUIRED python)
+  else()
+    find_package(Boost REQUIRED python3)
+  endif()
 else()
 find_package(Boost REQUIRED)
 endif()
-find_package(OpenCV REQUIRED)
+find_package(OpenCV 3 REQUIRED
+  COMPONENTS
+    opencv_core
+    opencv_imgproc
+    opencv_imgcodecs
+  CONFIG
+)
 
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES ${PROJECT_NAME}
   CATKIN_DEPENDS rosconsole sensor_msgs
   DEPENDS OpenCV
+  CFG_EXTRAS cv_bridge-extras.cmake
 )
 
 catkin_python_setup()
